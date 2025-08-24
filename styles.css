@@ -16,6 +16,26 @@ body {
   color: var(--black);
   margin: 0;
 }
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-wrapper > footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 1rem;
+  background: #e40000;
+  color: #fff;
+  font-size: 0.9rem;
+  }
+  
 
 /* ===== HEADER ===== */
 header {
