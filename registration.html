@@ -70,7 +70,7 @@
     <h1>Agent Registration</h1>
     <input type="text" id="name" placeholder="First Name" required>
     <input type="text" id="surname" placeholder="Surname" required>
-    <input type="text" id="identifier" placeholder="Nickname or Number (Required)" required>
+    <input type="text" id="identifier" placeholder="Name or Number (Optional)">
     <button class="register-btn" id="registerBtn">Register</button>
     <div class="message" id="msg"></div>
     <a href="home.html" id="homeLink" class="home-link" style="display:none;">Home</a>
@@ -83,7 +83,7 @@
     const msg = document.getElementById('msg');
     const homeLink = document.getElementById('homeLink');
 
-    function validateInput(name, surname, identifier) {
+    function validateInput(name, surname) {
       const nameRegex = /^[A-Za-z]{2,}$/;
       if (!nameRegex.test(name)) {
         msg.textContent = "First name must be at least 2 letters.";
@@ -92,12 +92,6 @@
       }
       if (!nameRegex.test(surname)) {
         msg.textContent = "Surname must be at least 2 letters.";
-        msg.className = "message error";
-        return false;
-      }
-
-      if (!nameRegex.test(Identifier)) {
-        msg.textContent = "Number/ Nickname must be at least 2.";
         msg.className = "message error";
         return false;
       }
@@ -142,4 +136,5 @@
     });
   </script>
 </body>
-</html>
+    </html>
+  
