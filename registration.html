@@ -83,7 +83,7 @@
     const msg = document.getElementById('msg');
     const homeLink = document.getElementById('homeLink');
 
-    function validateInput(name, surname) {
+    function validateInput(name, surname, identifier) {
       const nameRegex = /^[A-Za-z]{2,}$/;
       if (!nameRegex.test(name)) {
         msg.textContent = "First name must be at least 2 letters.";
@@ -92,6 +92,12 @@
       }
       if (!nameRegex.test(surname)) {
         msg.textContent = "Surname must be at least 2 letters.";
+        msg.className = "message error";
+        return false;
+      }
+
+      if (!nameRegex.test(Identifier)) {
+        msg.textContent = "Number/ Nickname must be at least 2.";
         msg.className = "message error";
         return false;
       }
