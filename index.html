@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MM Num Box - Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 1.2rem;
+      color: #e40000;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.6rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .login-btn { background: #e40000; color: #fff; }
+    .signup-btn {
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 0.6rem;
+      padding: 0.7rem;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .message {
+      font-size: 0.95rem;
+      margin-top: 0.8rem;
+      font-weight: bold;
+    }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Agent Login</h1>
+    <input type="text" id="name" placeholder="First Name" required>
+    <input type="text" id="surname" placeholder="Surname" required>
+    <input type="text" id="identifier" placeholder="Unique Identifier (e.g. number)" required>
+    <button class="login-btn" id="loginBtn">Login</button>
+    <a href="registration.html" class="signup-btn">Sign Up</a>
+    <div class="message" id="msg"></div>
+  </div>
+
+  <script>
+    // Auto-redirect disabled for debugging
+    // const loginTime = localStorage.getItem('loginTime');
+    // const now = Date.now();
+    // const THIRTY_MINUTES = 30 * 60 * 1000;
+    // if (loginTime && now - loginTime < THIRTY_MINUTES) {
+    //   window.location.href = 'home.html';
+    // }
+
+    const nameInput = document.getElementById('name');
+    const surnameInput = document.getElementById('surname');
+    const identifierInput = document.getElementById('identifier');
+    const msg = document.getElementById('msg');
+
+    function validateInput(name, surname, identifier) {
+      const nameRegex = /^[A-Za-z]{2,}$/;
+      if (!nameRegex.test(name)) {
+        msg.textContent = "First name must be at least 2 letters.";
+        msg.className = "message error";
+        return false;
+      }
+      if (!nameRegex.test(surname)) {
+        msg.textContent = "Surname must be at least 2 letters.";
+        msg.className = "message error";
+        return false;
+      }
+      if (identifier.length < 2) {
+        msg.textContent = "Unique identifier must be at least 2 characters.";
+        msg.className = "message error";
+        return false;
+      }
+      return true;
+    }
+
+    function getAgents() {
+      return JSON.parse(localStorage.getItem('agents') || '[]');
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const surname = surnameInput.value.trim();
+      const identifier = identifierInput.value.trim();
+      if (!validateInput(name, surname, identifier)) return;
+
+      const agents = getAgents();
+      const exists = agents.find(a =>
+        a.name === name && a.surname === surname && a.identifier === identifier
+      );
+
+      if (exists) {
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('loginTime', Date.now().toString());
+        localStorage.setItem('currentAgent', JSON.stringify(exists));
+        window.location.href = 'home.html';
+      } else {
+        msg.textContent = "No account found. Please sign up first.";
+        msg.className = "message error";
+      }
+    });
+  </script>
+</body>
+</html>

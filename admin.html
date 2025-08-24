@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      color: #e40000;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+    th, td {
+      
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #e40000;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .delete-btn {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      background-color: #cc0000;
+    }
+    .empty-msg {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel</h1>
+  <table id="agentsTable">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Surname</th>
+        <th>Identifier</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="agentsBody"></tbody>
+  </table>
+  <div class="empty-msg" id="emptyMsg" style="display:none;">No agents registered yet.</div>
+
+  <script>
+    const agentsBody = document.getElementById('agentsBody');
+    const emptyMsg = document.getElementById('emptyMsg');
+
+    function getAgents() {
+      return JSON.parse(localStorage.getItem('agents') || '[]');
+    }
+
+    function saveAgents(agents) {
+      localStorage.setItem('agents', JSON.stringify(agents));
+    }
+
+    function renderAgents() {
+      const agents = getAgents();
+      agentsBody.innerHTML = "";
+
+      if (agents.length === 0) {
+        emptyMsg.style.display = "block";
+        return;
+      } else {
+        emptyMsg.style.display = "none";
+      }
+
+      agents.forEach((agent, index) => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td>${agent.name}</td>
+          <td>${agent.surname}</td>
+          <td>${agent.identifier || '-'}</td>
+          <td><button class="delete-btn" onclick="deleteAgent(${index})">Delete</button></td>
+        `;
+
+        agentsBody.appendChild(row);
+      });
+    }
+
+    function deleteAgent(index) {
+      let agents = getAgents();
+      agents.splice(index, 1);
+      saveAgents(agents);
+      renderAgents();
+    }
+
+    renderAgents();
+  </script>
+</body>
+</html>

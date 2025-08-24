@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agent Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .register-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 1.2rem;
+      margin-top: 5.5rem;
+      color: #e40000;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.6rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .register-btn {
+      background: #e40000;
+      color: #fff;
+    }
+    .message {
+      font-size: 0.95rem;
+      margin-top: 0.8rem;
+      font-weight: bold;
+    }
+    .success { color: green; }
+    .error { color: red; }
+    .home-link {
+      display: block;
+      margin-top: 1rem;
+      color: #0077cc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h1>Agent Registration</h1>
+    <input type="text" id="name" placeholder="First Name" required>
+    <input type="text" id="surname" placeholder="Surname" required>
+    <input type="text" id="identifier" placeholder="Name or Number (Optional)">
+    <button class="register-btn" id="registerBtn">Register</button>
+    <div class="message" id="msg"></div>
+    <a href="home.html" id="homeLink" class="home-link" style="display:none;">Home</a>
+  </div>
+
+  <script>
+    const nameInput = document.getElementById('name');
+    const surnameInput = document.getElementById('surname');
+    const identifierInput = document.getElementById('identifier');
+    const msg = document.getElementById('msg');
+    const homeLink = document.getElementById('homeLink');
+
+    function validateInput(name, surname) {
+      const nameRegex = /^[A-Za-z]{2,}$/;
+      if (!nameRegex.test(name)) {
+        msg.textContent = "First name must be at least 2 letters.";
+        msg.className = "message error";
+        return false;
+      }
+      if (!nameRegex.test(surname)) {
+        msg.textContent = "Surname must be at least 2 letters.";
+        msg.className = "message error";
+        return false;
+      }
+      return true;
+    }
+
+    function getAgents() {
+      return JSON.parse(localStorage.getItem('agents') || '[]');
+    }
+
+    function saveAgents(agents) {
+      localStorage.setItem('agents', JSON.stringify(agents));
+    }
+
+    document.getElementById('registerBtn').addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const surname = surnameInput.value.trim();
+      const identifier = identifierInput.value.trim();
+
+      if (!validateInput(name, surname)) return;
+
+      let agents = getAgents();
+      let duplicate = agents.find(a => a.name === name && a.surname === surname && a.identifier === identifier);
+
+      if (duplicate) {
+        msg.textContent = "Agent already registered.";
+        msg.className = "message error";
+        homeLink.style.display = "none";
+        return;
+      }
+
+      agents.push({ name, surname, identifier });
+      saveAgents(agents);
+
+      msg.textContent = "Registration successful!";
+      msg.className = "message success";
+      homeLink.style.display = "inline-block";
+
+      nameInput.value = "";
+      surnameInput.value = "";
+      identifierInput.value = "";
+    });
+  </script>
+</body>
+</html>
